@@ -1,37 +1,32 @@
 import express, { Application } from 'express';
-import db from './model/db';
+import cors from 'cors';
+import routers from './routers/routers';
 
 class App {
   private app: Application;
   private port: number;
-  private pool: db;
-  private query: string;
+  private routers;;
+
 
   constructor(port: number) {
     this.app = express();
     this.port = port;
+    this.routers = new routers()
     this.initMiddlewares();
-    this.startingRouters();
-    this.pool = new db();
+    this.startingRouters(routers);
 
   }
 
   private initMiddlewares() {
     this.app.use(express.json());
+    this.app.use(cors())
   }
 
-  private startingRouters() {
+  private startingRouters(routers) {
     this.app.get('/', (req, res) => {
-      res.send('Server is runnig bro chill!');
+      res.send('Server is running bro chill!');
     });
-
-    this.app.get('/db', (req, res) => {
-      this.query = 'SELECT * FROM users';
-      this.pool.getPool().query(this.query, (err, result, fields) => {
-        console.log(result);
-      })
-      res.send('all ok');
-    })
+    this.app.use(routers);
   }
 
   public listen() {

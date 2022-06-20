@@ -1,14 +1,14 @@
 import mysql, { Pool } from 'mysql2';
-import { dbConfig } from '../common/config/config';
+import { config } from './config';
 
 class db {
-  private pool: Pool;
+  public pool: Pool;
 
   constructor() {
     this.pool = mysql.createPool({
       host: 'localhost',
       user: 'root',
-      password: "Mo62466385@",
+      password: config.DB_PASS,
       database: 'ued',
       waitForConnections: true,
       connectionLimit: 100,
@@ -16,9 +16,6 @@ class db {
     });
   }
 
-  public getPool(): Pool {
-    return this.pool;
-  }
 }
 
-export default db; 
+export default db;
