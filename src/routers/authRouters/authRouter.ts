@@ -1,8 +1,9 @@
 import { Request, Response, Router } from "express";
+import abstractRouter from "../../abstracts/abstractRouters";
 
-class authRouter {
-    router = Router();
+class authRouter extends abstractRouter {
     constructor() {
+        super();
         this.callRouter();
     }
     callRouter() {

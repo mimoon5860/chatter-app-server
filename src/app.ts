@@ -1,20 +1,16 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import routers from './routers/routers';
+import allRouters from './routers/allRouters';
 
 class App {
   private app: Application;
   private port: number;
-  private routers;;
-
 
   constructor(port: number) {
     this.app = express();
     this.port = port;
-    this.routers = new routers()
     this.initMiddlewares();
-    this.startingRouters(routers);
-
+    this.startingRouters(new allRouters());
   }
 
   private initMiddlewares() {
@@ -22,11 +18,13 @@ class App {
     this.app.use(cors())
   }
 
-  private startingRouters(routers) {
-    this.app.get('/', (req, res) => {
+  private startingRouters(routers: allRouters) {
+    this.app.get('/', (_req, res) => {
       res.send('Server is running bro chill!');
     });
-    this.app.use(routers);
+
+    // auth router 
+    this.app.use(routers.authRouter);
   }
 
   public listen() {
