@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import allRouters from './routers/allRouters';
+import morgan from 'morgan';
 
 class App {
   private app: Application;
@@ -16,6 +17,7 @@ class App {
   private initMiddlewares() {
     this.app.use(express.json());
     this.app.use(cors())
+    this.app.use(morgan('tiny'))
   }
 
   private startingRouters(routers: allRouters) {
