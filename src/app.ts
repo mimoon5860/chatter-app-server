@@ -12,6 +12,7 @@ class App {
     this.port = port;
     this.initMiddlewares();
     this.startingRouters(new allRouters());
+    this.errorHandle();
   }
 
   private initMiddlewares() {
@@ -26,7 +27,11 @@ class App {
     });
 
     // auth router 
-    this.app.use(routers.authRouter);
+    this.app.use('/auth', routers.authRouter);
+  }
+
+  private errorHandle() {
+
   }
 
   public listen() {

@@ -1,4 +1,3 @@
-import { Request, Response, Router } from "express";
 import abstractRouter from "../../abstracts/abstractRouters";
 import authController from "../../controllers/authController";
 
@@ -8,8 +7,10 @@ class authRouter extends abstractRouter {
         super();
         this.callRouter();
     }
+
+    //call all router
     callRouter() {
-        this.router.get('/router', this.authcontroller.signupController);
+        this.router.post('/user/signup', this.authcontroller.signupController);
     }
 }
 export default authRouter;
