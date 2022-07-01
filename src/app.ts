@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import allRouters from './routers/allRouters';
 import morgan from 'morgan';
+import notFound from './middleware/notFound';
+import errorHandle from './middleware/errorHandler';
 
 class App {
   private app: Application;
@@ -28,10 +30,12 @@ class App {
 
     // auth router 
     this.app.use('/auth', routers.authRouter);
+
+    this.app.use(new notFound().notFound)
   }
 
   private errorHandle() {
-
+    this.app.use(new errorHandle().error)
   }
 
   public listen() {
