@@ -28,12 +28,11 @@ class db {
       password: { type: String, required: true },
       created: { type: Date, default: Date.now },
       verified: { type: String, enum: ["verified", "unverified"], default: "unverified" },
-      photo: String
+      photo: { type: String, default: null }
     });
     const User = models.User || model<IUser>('User', userSchema);
     return User;
   }
-
 }
 
 export default db;

@@ -29,7 +29,10 @@ class App {
     });
 
     // auth router 
-    this.app.use('/auth', routers.authRouter);
+    this.app.use('/api/auth', routers.authRouter);
+
+    // user router
+    this.app.use('/api', routers.userRouter);
 
     this.app.use(new notFound().notFound)
   }
