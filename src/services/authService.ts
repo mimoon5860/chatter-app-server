@@ -7,8 +7,6 @@ class authServices extends db {
     constructor() {
         super();
     }
-
-
     // sign up service
     public signupService = async (req: Request) => {
         const user = req.body;
@@ -31,11 +29,12 @@ class authServices extends db {
 
         const userCollection = this.userCollection();
         const checkUser = await userCollection.findOne({ phone: creds.phone });
-        console.log({ checkUser });
+        const { password, __v, ...rest } = checkUser._doc;
         if (checkUser) {
-            const passCheck = await lib.compare(creds.password, checkUser.password)
+            const passCheck = await lib.compare(creds.password, password)
             if (passCheck) {
-                return { success: true, data: checkUser }
+
+                return { success: true, data: rest }
             } else {
                 return { success: false, msg: "Wrong password!" }
             }
