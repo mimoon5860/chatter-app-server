@@ -1,29 +1,18 @@
-import { NextFunction, Request } from 'express';
-import abstractServices from '../abstracts/abstractServices';
+import { Request } from 'express';
+import db from '../model/db';
 
-class authServices extends abstractServices {
+class authServices extends db {
 
     constructor() {
         super();
     }
 
-    public signupService = async (req: Request, next: NextFunction) => {
-        try {
-            const user = req.body;
-            const connection = this.getUserConnection();
-            const checkNumber = await connection.findOne({ phone: user.phone })
-            console.log(checkNumber);
-            const result = await connection.insertOne({ ...user, status: 'unverified', photo: null });
-            if (result.insertedId) {
-                return { success: true, userId: result.insertedId }
-            } else {
-                return { success: false, msg: 'Could not create an user' }
-            }
-        } catch (err) {
-            console.log(err)
-        } finally {
-            this.client.close();
-        }
+    public signupService = async (req: Request) => {
+        const user = req.body;
+        const userCollection = this.userCollection();
+        const result = new userCollection(user);
+        await result.save();
+        return { success: true, userId: result._id }
     }
 }
 

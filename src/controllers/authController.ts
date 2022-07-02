@@ -6,16 +6,20 @@ class authController {
     private authServices = new authServices();
 
     public signupController = async (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ success: false, errors: errors.array() });
-        } else {
-            const data = await this.authServices.signupService(req, next);
-            if (data.success) {
-                res.status(200).json(data);
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                res.status(400).json({ success: false, errors: errors.array() });
             } else {
-                next(data.msg || 'Something is wrong! try again.');
+                const data = await this.authServices.signupService(req);
+                if (!data) {
+                    res.status(200).json(data);
+                } else {
+                    next(" ");
+                }
             }
+        } catch (err) {
+            next(err);
         }
 
     }

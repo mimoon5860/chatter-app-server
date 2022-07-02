@@ -35,7 +35,7 @@ class App {
   }
 
   private errorHandle() {
-    this.app.use(new errorHandle().error)
+    this.app.use(new errorHandle().error);
   }
 
   public listen() {
