@@ -1,12 +1,8 @@
-import { connect, model, Schema } from 'mongoose';
+import { connect, model, Schema, models } from 'mongoose';
 import { IUser } from '../utils/types/types';
 import { config } from './config';
 
 class db {
-  constructor() {
-    this.dbConnect();
-  }
-
 
   //database connection
   private dbConnect = async () => {
@@ -18,10 +14,9 @@ class db {
       }
     });
   }
-
-
   // user collection 
   public userCollection = () => {
+    this.dbConnect();
     const userSchema = new Schema<IUser>({
       name: { type: String, required: true },
       phone: { type: String, required: true },
@@ -30,7 +25,7 @@ class db {
       verified: { type: String, enum: ["verified", "unverified"], default: "unverified" },
       photo: String
     });
-    const User = model<IUser>('User', userSchema);
+    const User = models.User || model<IUser>('User', userSchema);
     return User;
   }
 
