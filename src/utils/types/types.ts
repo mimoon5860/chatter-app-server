@@ -1,11 +1,17 @@
-import { Date } from "mongoose";
+import { Date, Types } from "mongoose";
 
 // user table Schema type 
-export type IUser = {
+export type TUser = {
     name: string;
     phone: string;
     photo?: string;
     verified: string;
     password: string;
-    created: Date;
+}
+
+export type TFriend = {
+    userId: Types.ObjectId,
+    friendId: Types.ObjectId,
+    type: string,
+    note: string
 }

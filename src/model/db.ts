@@ -1,5 +1,5 @@
 import { connect, model, Schema, models } from 'mongoose';
-import { IUser } from '../utils/types/types';
+import { TUser, TFriend } from '../utils/types/types';
 
 class db {
 
@@ -18,20 +18,39 @@ class db {
     }
   }
 
-
   // user collection 
-  public userCollection = () => {
+  public userCollection() {
     this.dbConnect();
-    const userSchema = new Schema<IUser>({
+    const userSchema = new Schema<TUser>({
       name: { type: String, required: true },
       phone: { type: String, required: true },
       password: { type: String, required: true },
-      created: { type: Date, default: Date.now },
       verified: { type: String, enum: ["verified", "unverified"], default: "unverified" },
-      photo: { type: String, default: null }
-    });
-    const User = models.User || model<IUser>('User', userSchema);
-    return User;
+      photo: { type: String, default: null },
+    }, { timestamps: true });
+    const Users = models.Users || model<TUser>('Users', userSchema);
+    return Users;
+  }
+
+  // Friends collection
+  public friendsCollection() {
+    this.dbConnect();
+    const friendsSchema = new Schema<TFriend>({
+      userId: { type: Schema.Types.ObjectId, ref: 'Users' },
+      friendId: { type: Schema.Types.ObjectId, ref: 'Users' },
+      type: {
+        type: String,
+        enums: [
+          "friend",
+          "blocked",
+          "requested",
+        ]
+      },
+      note: { type: String, default: null }
+
+    }, { timestamps: true });
+    const Friends = models.Friends || model<TFriend>('Friends', friendsSchema);
+    return Friends;
   }
 }
 

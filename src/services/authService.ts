@@ -29,8 +29,8 @@ class authServices extends db {
 
         const userCollection = this.userCollection();
         const checkUser = await userCollection.findOne({ phone: creds.phone });
-        const { password, __v, ...rest } = checkUser._doc;
         if (checkUser) {
+            const { password, __v, ...rest } = checkUser._doc;
             const passCheck = await lib.compare(creds.password, password)
             if (passCheck) {
 

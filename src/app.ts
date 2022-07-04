@@ -32,7 +32,7 @@ class App {
     this.app.use('/api/auth', routers.authRouter);
 
     // user router
-    this.app.use('/api', routers.userRouter);
+    this.app.use('/api/user', routers.userRouter);
 
     this.app.use(new notFound().notFound)
   }
