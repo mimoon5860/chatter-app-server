@@ -34,6 +34,9 @@ class App {
     // user router
     this.app.use('/api/user', routers.userRouter);
 
+    // friend activity router 
+    this.app.use('/api/friend', routers.friendRouter)
+
     this.app.use(new notFound().notFound)
   }
 

@@ -2,7 +2,6 @@ import { connect, model, Schema, models } from 'mongoose';
 import { TUser, TFriend } from '../utils/types/types';
 
 class db {
-
   //database connection
   private dbConnect = async () => {
     try {
@@ -36,15 +35,15 @@ class db {
   public friendsCollection() {
     this.dbConnect();
     const friendsSchema = new Schema<TFriend>({
-      userId: { type: Schema.Types.ObjectId, ref: 'Users' },
-      friendId: { type: Schema.Types.ObjectId, ref: 'Users' },
+      userId: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
+      friendId: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
       type: {
         type: String,
         enums: [
           "friend",
           "blocked",
           "requested",
-        ]
+        ], required: true
       },
       note: { type: String, default: null }
 

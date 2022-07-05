@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { param } from "express-validator";
 import abstractRouter from "../../abstracts/abstractRouters";
 import userController from "../../controllers/userController";
 import sanitizers from "../../utils/inputValidation/sanitizers";
@@ -12,14 +12,13 @@ class userRouter extends abstractRouter {
     }
 
     private callRouter() {
+        // Search and find an user by phone 
+        this.router.get('/search/:phone', param('phone').isString().isLength({ min: 11 }), this.userController.searchAnUser)
+
         //get an user router
-        this.router.get('/get/:id', param('id').customSanitizer(sanitizers.toObjectId), this.userController.getAnUser);
+        this.router.get('/get/:viewer/:user', param('viewer').customSanitizer(sanitizers.toObjectId), param('user').customSanitizer(sanitizers.toObjectId), this.userController.getAnUser);
 
-        // user add friend
-        this.router.post('/send/request', body('sender_id').exists().customSanitizer(sanitizers.toObjectId), body('receiver_id').exists().customSanitizer(sanitizers.toObjectId), this.userController.sendFriendRequest);
 
-        // user accept friend request
-        this.router.post('/send/request', body('requester').exists().customSanitizer(sanitizers.toObjectId), body('receiver').exists().customSanitizer(sanitizers.toObjectId), this.userController.acceptFriendRequest);
     }
 }
 

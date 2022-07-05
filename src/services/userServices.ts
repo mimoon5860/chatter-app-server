@@ -1,62 +1,66 @@
 import { Request } from "express";
 import db from "../model/db";
+import { TFriend, TUser } from "../utils/types/types";
 
 class userServices extends db {
     constructor() {
         super();
     }
 
-    // get an user service
-    public getAnUserService = async (req: Request) => {
-        const { id } = req.params;
+    // search an user by phone 
+    public searchAnUser = async (req: Request) => {
+        const { phone } = req.params;
         const userCollection = this.userCollection();
-        const user = await userCollection.findById(id).select({ password: 0, __v: 0 });
+        const user: TUser = await userCollection.findOne({ phone }).select({ name: 1, phone: 1, photo: 1 });
         if (user) {
             return { success: true, data: user };
         } else {
-            return { success: false, msg: "Wrong user id" };
+            return { success: false, msg: "Cannot found any user with this phone" };
         }
     }
 
-    // send friend request service
-    public sendRequestService = async (req: Request) => {
-        const { sender_id, receiver_id, note } = req.body;
-        console.log(req.body);
+    // get an user service
+    public getAnUserService = async (req: Request) => {
+        const { viewer, user } = req.params;
+        const userCollection = this.userCollection();
         const friendsCollection = this.friendsCollection();
 
-        const checkFromSender = await friendsCollection.findOne({ userId: sender_id, friendId: receiver_id }).select({});
-        const checkFromReceiver = await friendsCollection.findOne({ userId: receiver_id, friendId: sender_id });
+        const checkFromViewer: TFriend = await friendsCollection.findOne({ userId: viewer, friendId: user }).select({ type: 1 });
+        const checkFromUser = await friendsCollection.findOne({ userId: user, friendId: viewer }).select({ type: 1 });
 
-        if (!checkFromSender && !checkFromReceiver) {
-            const result = new friendsCollection({ userId: sender_id, friendId: receiver_id, note, type: 'requested' });
-            const data = await result.save();
-            return { success: true, msg: 'Friend request send successfully' }
-        } else if (checkFromSender) {
-            return { success: false, msg: `You Already ${checkFromSender.type}` }
-        } else if (checkFromReceiver) {
-            return { success: false, msg: `He Already ${checkFromReceiver.type}` }
+        const userData: TUser = await userCollection.findById(user).select({ password: 0, verified: 0, createdAt: 0, updatedAt: 0, __v: 0 });
+
+        if (checkFromViewer) {
+            switch (checkFromViewer.type) {
+                case "friend":
+                    return { success: true, data: userData, type: "friend" }
+                case "requested":
+                    return { success: true, data: userData, type: "requesting" }
+                case "blocked":
+                    return { success: true, data: userData, type: "blocking" }
+                default:
+                    return { success: false, msg: 'Something is wrong!' }
+            }
+        } else if (checkFromUser) {
+            switch (checkFromUser.type) {
+                case "friend":
+                    return { success: true, data: userData, type: "friend" }
+                case "requested":
+                    return { success: true, data: userData, type: "requested" }
+                case "blocked":
+                    return { success: true, type: "blocked" }
+                default:
+                    return { success: false, msg: 'Something is wrong!' }
+            }
         } else {
-            return { success: false, msg: 'Cannot Send Request now!' }
+            if (userData) {
+                return { success: true, data: userData }
+            } else {
+                return { success: false, msg: 'Something is wrong!' }
+            }
         }
     }
 
-
-
-    // accept friend request service
-    public acceptRequestService = async (req: Request) => {
-        const { requester, receiver } = req.body;
-        console.log(req.body);
-        const friendsCollection = this.friendsCollection();
-
-        const check = await friendsCollection.findOne({ userId: requester, friendId: receiver }).select({ type: 1 });
-
-        if (!check) {
-
-            return { success: true, msg: 'Friend request send successfully' }
-        } else {
-            return { success: false, msg: 'Cannot accept Request now!' }
-        }
-    }
 
 
 }
