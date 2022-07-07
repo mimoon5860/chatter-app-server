@@ -1,4 +1,4 @@
-import { Date, Types } from "mongoose";
+import { Types } from "mongoose";
 
 // user table Schema type 
 export type TUser = {
@@ -14,4 +14,12 @@ export type TFriend = {
     friendId: Types.ObjectId,
     type: string,
     note: string
+}
+
+export type TChat = {
+    message: string,
+    senderId: Types.ObjectId,
+    receiverId: Types.ObjectId,
+    status: string,
+    file: string
 }

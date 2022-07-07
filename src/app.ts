@@ -35,7 +35,10 @@ class App {
     this.app.use('/api/user', routers.userRouter);
 
     // friend activity router 
-    this.app.use('/api/friend', routers.friendRouter)
+    this.app.use('/api/friend', routers.friendRouter);
+
+    // chatting router 
+    this.app.use('/api/chats', routers.chatRouter);
 
     this.app.use(new notFound().notFound)
   }

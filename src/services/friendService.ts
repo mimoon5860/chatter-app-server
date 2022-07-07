@@ -10,7 +10,6 @@ class friendService extends db {
     public sendFriendRequest = async (req: Request) => {
         const { sender_id, receiver_id, note } = req.body;
         const friendsCollection = this.friendsCollection();
-
         const checkFromSender = await friendsCollection.findOne({ userId: sender_id, friendId: receiver_id }).select({});
         const checkFromReceiver = await friendsCollection.findOne({ userId: receiver_id, friendId: sender_id });
 
@@ -47,6 +46,92 @@ class friendService extends db {
             return { success: false, msg: 'Cannot accept Request now!' }
         }
     }
+
+    // cancel friend request service
+    public cancelRequest = async (req: Request) => {
+        const { user_id, friend_id } = req.body;
+        const friendsCollection = this.friendsCollection();
+        const checkFromUser = await friendsCollection.findOne({ userId: friend_id, friendId: user_id }).select({ type: 1 });
+
+        if (checkFromUser.type === 'requested') {
+            const result = await friendsCollection.deleteOne({ _id: checkFromUser._id });
+
+            if (result.deletedCount) {
+                return { success: true, msg: 'Cancel friend request successful!' }
+            } else {
+                return { success: false, msg: 'Cannot cancel friend request now!' };
+            }
+        } else {
+            return { success: false, msg: 'Invalid id or relationship!' }
+        }
+    }
+
+
+    // block user service
+    public userBlockFriend = async (req: Request) => {
+        const { user_id, friend_id } = req.body;
+
+        const friendsCollection = this.friendsCollection();
+        const checkFromUser = await friendsCollection.findOne({ userId: user_id, friendId: friend_id }).select({ type: 1 });
+        const checkFromFriend = await friendsCollection.findOne({ userId: friend_id, friendId: user_id }).select({ type: 1 });
+
+        if (checkFromUser?.type === 'friend' || checkFromFriend?.type === 'friend' || (checkFromUser?.type === null && checkFromFriend?.type === null)) {
+            const result = await friendsCollection.findByIdAndUpdate(checkFromUser._id || checkFromFriend._id, { type: "blocked", userId: user_id, friendId: friend_id }, { new: true }).select({ type: 1 });
+
+            if (result.type === 'blocked') {
+                return { success: true, msg: 'User blocked successful!' }
+            } else {
+                return { success: false, msg: 'Cannot block user now!' };
+            }
+        } else {
+            return { success: false, msg: 'Invalid id or relationship!' }
+        }
+    }
+
+
+    // unblock service
+    public userUnblockFriend = async (req: Request) => {
+        const { user_id, friend_id } = req.body;
+
+        const friendsCollection = this.friendsCollection();
+        const checkFromUser = await friendsCollection.findOne({ userId: user_id, friendId: friend_id }).select({ type: 1 });
+
+        if (checkFromUser.type === 'blocked') {
+            const result = await friendsCollection.deleteOne({ _id: checkFromUser._id });
+
+            if (result.deletedCount) {
+                return { success: true, msg: 'User unblocked successful!' }
+            } else {
+                return { success: false, msg: 'Cannot unblock user now!' };
+            }
+        } else {
+            return { success: false, msg: 'Invalid id or relationship!' }
+        }
+    }
+
+
+    // unfriend service
+    public unFriend = async (req: Request) => {
+        const { user_id, friend_id } = req.body;
+
+        const friendsCollection = this.friendsCollection();
+        const checkFromUser = await friendsCollection.findOne({ userId: user_id, friendId: friend_id }).select({ type: 1 });
+        const checkFromFriend = await friendsCollection.findOne({ userId: friend_id, friendId: user_id }).select({ type: 1 });
+
+        if (checkFromUser?.type === 'friend' || checkFromFriend?.type === 'friend') {
+            const result = await friendsCollection.deleteOne({ _id: checkFromUser._id });
+
+            if (result.deletedCount) {
+                return { success: true, msg: 'User unfriend successful!' }
+            } else {
+                return { success: false, msg: 'Cannot unfriend user now!' };
+            }
+        } else {
+            return { success: false, msg: 'Invalid id or relationship!' }
+        }
+    }
+
+
 
 }
 export default friendService;
