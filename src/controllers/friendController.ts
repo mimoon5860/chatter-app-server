@@ -1,126 +1,81 @@
-import { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { Request, Response } from "express";
+import abstractController from "../abstracts/abstractController";
 import friendService from "../services/friendService";
 
-class friendController {
+class friendController extends abstractController {
     private friendService = new friendService();
 
     // send friend request controller
-    public sendFriendRequest = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.friendService.sendFriendRequest(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public sendFriendRequest = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.friendService.sendFriendRequest(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
+
     }
+    )
 
     // accept friend request controller
-    public acceptFriendRequest = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.friendService.acceptFriendRequest(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public acceptFriendRequest = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.friendService.acceptFriendRequest(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+
+    })
 
     // cancel friend friend request controller
-    public cancelFriendRequest = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.friendService.cancelRequest(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public cancelFriendRequest = this.wrap(async (req: Request, res: Response) => {
+
+        const data = await this.friendService.cancelRequest(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+
+    })
 
 
     // block friend  controller
-    public blockFriend = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.friendService.userBlockFriend(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public blockFriend = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.friendService.userBlockFriend(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+
+    })
 
 
     // unblock friend  controller
-    public unblockFriend = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.friendService.userUnblockFriend(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public unblockFriend = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.friendService.userUnblockFriend(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+
+    })
 
 
     // unfriend  controller
-    public unFriend = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.friendService.unFriend(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public unFriend = this.wrap(async (req: Request, res: Response) => {
+
+        const data = await this.friendService.unFriend(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+
+    })
 }
 
 export default friendController;

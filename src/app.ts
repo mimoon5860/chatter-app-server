@@ -40,6 +40,9 @@ class App {
     // chatting router 
     this.app.use('/api/chats', routers.chatRouter);
 
+    // conversation routers 
+    this.app.use('/api/conversation', routers.conversationRouter);
+
     this.app.use(new notFound().notFound)
   }
 

@@ -15,7 +15,7 @@ class friendService extends db {
 
         if (!checkFromSender && !checkFromReceiver) {
             const result = new friendsCollection({ userId: sender_id, friendId: receiver_id, note, type: 'requested' });
-            const data = await result.save();
+            await result.save();
             return { success: true, msg: 'Friend request send successfully' }
         } else if (checkFromSender) {
             return { success: false, msg: `You Already ${checkFromSender.type}` }

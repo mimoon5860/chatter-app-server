@@ -1,4 +1,8 @@
+import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
+
+// abstract controller wrap type 
+export type func = (req: Request, res: Response, next: NextFunction) => Promise<void>;
 
 // user table Schema type 
 export type TUser = {
@@ -16,10 +20,16 @@ export type TFriend = {
     note: string
 }
 
+export type TConversation = {
+    creator: Types.ObjectId,
+    participant: Types.ObjectId[]
+}
+
 export type TChat = {
     message: string,
     senderId: Types.ObjectId,
     receiverId: Types.ObjectId,
     status: string,
-    file: string
+    file: string[],
+    conversation: Types.ObjectId
 }

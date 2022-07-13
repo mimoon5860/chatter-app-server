@@ -1,48 +1,30 @@
-import { Response, Request, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import db from "../model/db";
+import { Response, Request } from "express";
+import abstractController from "../abstracts/abstractController";
 import authServices from "../services/authService";
 
-class authController {
+class authController extends abstractController {
     private authServices = new authServices();
 
     //signup new user
-    public signupController = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.authServices.signupService(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public signupController = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.authServices.signupService(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+    })
 
     // Login user
-    public loginUser = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.authServices.loginService(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
+    public loginUser = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.authServices.loginService(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
         }
-    }
+
+    })
 }
 
 export default authController;

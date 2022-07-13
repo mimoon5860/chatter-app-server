@@ -1,50 +1,35 @@
-import { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { Request, Response } from "express";
+import abstractController from "../abstracts/abstractController";
 import userServices from "../services/userServices";
 
-class userController {
+class userController extends abstractController {
     private userServices = new userServices();
 
     //Search an user by phone controller
-    public searchAnUser = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.userServices.searchAnUser(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(404).json(data);
-                }
+    public searchAnUser = this.wrap(async (req: Request, res: Response) => {
 
-            }
-        } catch (err) {
-            next(err);
+        const data = await this.userServices.searchAnUser(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(404).json(data);
         }
-    }
+
+
+    })
 
 
     // get an user controller 
-    public getAnUser = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                res.status(400).json({ success: false, errors: errors.array() });
-            } else {
-                const data = await this.userServices.getAnUserService(req);
-                if (data.success) {
-                    res.status(200).json(data);
-                } else {
-                    res.status(403).json(data);
-                }
-            }
-        } catch (err) {
-            next(err);
-        }
-    }
+    public getAnUser = this.wrap(async (req: Request, res: Response) => {
 
+        const data = await this.userServices.getAnUserService(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(403).json(data);
+        }
+
+    })
 
 }
 export default userController;
