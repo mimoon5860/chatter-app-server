@@ -8,6 +8,17 @@ class conversationController extends abstractController {
         super();
     }
 
+    // create conversation 
+    public createConversation = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.conversationService.createConversation(req);
+        if (data.success) {
+            res.status(200).json(data)
+        } else {
+            res.status(500).json(data);
+        }
+    })
+
+    // get all conversations
     public getAllConversation = this.wrap(async (req: Request, res: Response) => {
         const data = await this.conversationService.getAllConversation(req);
         if (data.success) {

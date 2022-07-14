@@ -11,16 +11,6 @@ class chatsController extends abstractController {
         super();
     }
 
-    // get all conversation
-    public getAllConversation = this.wrap(async (req: Request, res: Response) => {
-        const data = await this.chatService.getAllConversation(req);
-        if (data.success) {
-            res.status(200).json(data);
-        } else {
-            res.status(500).json(data);
-        }
-    })
-
 
     // send sms controller 
     public sendMsgController = this.wrap(async (req: Request, res: Response) => {
@@ -33,6 +23,17 @@ class chatsController extends abstractController {
             res.status(500).json(data);
         }
     });
+
+    // get all msgs of a conversation controller
+    public getMsgsOfConvo = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.chatService.getMsgsOfConvo(req);
+
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(500).json(data);
+        }
+    })
 }
 
 

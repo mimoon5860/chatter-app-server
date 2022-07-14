@@ -27,7 +27,7 @@ class db {
       verified: { type: String, enum: ["verified", "unverified"], default: "unverified" },
       photo: { type: String, default: null },
     }, { timestamps: true });
-    const Users = models.Users || model<TUser>('Users', userSchema);
+    const Users = models.User || model<TUser>('User', userSchema);
     return Users;
   }
 
@@ -35,8 +35,8 @@ class db {
   public friendsCollection() {
     this.dbConnect();
     const friendsSchema = new Schema({
-      userId: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
-      friendId: { type: Schema.Types.ObjectId, ref: 'Users', required: true },
+      userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      friendId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
       type: {
         type: String,
         enums: [
@@ -48,7 +48,7 @@ class db {
       note: { type: String, default: null }
 
     }, { timestamps: true });
-    const Friends = models.Friends || model<TFriend>('Friends', friendsSchema);
+    const Friends = models.Friend || model<TFriend>('Friend', friendsSchema);
     return Friends;
   }
 
@@ -57,14 +57,17 @@ class db {
     this.dbConnect();
     const conversationSchema = new Schema<TConversation>({
       creator: {
-        type: Schema.Types.ObjectId, ref: 'Users', required: true
+        type: Schema.Types.ObjectId, ref: 'User', required: true
       },
       participant: [{
-        type: Schema.Types.ObjectId, ref: 'Users', required: true
+        type: Schema.Types.ObjectId, ref: 'User', required: true
       }],
+      type: { type: String, enum: ['personal', 'group'], required: true },
+      name: { type: String, default: null },
+      coverImg: { type: String, default: null }
     }, { timestamps: true });
-    const Conversations = models.Conversations || model<TConversation>('Conversations', conversationSchema);
-    return Conversations;
+    const Conversation = models.Conversation || model<TConversation>('Conversation', conversationSchema);
+    return Conversation;
   }
 
   // Chat collection
@@ -72,13 +75,12 @@ class db {
     this.dbConnect();
     const chatsSchema = new Schema<TChat>({
       message: { type: String, default: null },
-      senderId: { type: Schema.Types.ObjectId, ref: "Users", required: true },
-      receiverId: { type: Schema.Types.ObjectId, ref: "Users", required: true },
+      senderId: { type: Schema.Types.ObjectId, ref: "User", required: true },
       status: { type: String, enum: ['unread', "read"], default: "unread" },
       file: { type: [String], default: null },
-      conversation: { type: Schema.Types.ObjectId, ref: "Conversations", required: true }
+      conversation: { type: Schema.Types.ObjectId, ref: "Conversation", required: true }
     }, { timestamps: true });
-    const Chats = models.Chats || model<TChat>('Chats', chatsSchema);
+    const Chats = models.Chat || model<TChat>('Chat', chatsSchema);
     return Chats;
   }
 }

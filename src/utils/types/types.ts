@@ -22,7 +22,10 @@ export type TFriend = {
 
 export type TConversation = {
     creator: Types.ObjectId,
-    participant: Types.ObjectId[]
+    participant: Types.ObjectId[],
+    type: string,
+    name: string,
+    coverImg: string
 }
 
 export type TChat = {

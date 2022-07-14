@@ -6,17 +6,10 @@ class chatService extends db {
         super();
     }
 
+    // send msgs
     public sendMsg = async (req: Request) => {
-        const { senderId, receiverId, message, conversation } = req.body;
-        const conversationCollection = this.conversationCollection();
         const chatCollection = this.chatCollection();
-        if (!conversation) {
-            const conversation = new conversationCollection({ creator: senderId, participant: [senderId, receiverId] });
-            const convo = await conversation.save();
-            req.body.conversation = convo._id;
-        }
-
-        const data = new chatCollection({ message, senderId, receiverId, conversation: req.body.conversation });
+        const data = new chatCollection(req.body);
         const msg = await data.save();
         if (msg._id) {
             return { success: true, msg: "Message has been send successfully!" }
@@ -25,10 +18,17 @@ class chatService extends db {
         }
     }
 
-    public getAllConversation = async (req: Request) => {
-        const { userId } = req.params;
+    // get all msg of a conversation
+    public getMsgsOfConvo = async (req: Request) => {
+        const { conversation } = req.params;
+        const chatCollection = this.chatCollection();
 
-        return { success: true }
+        const data = await chatCollection.find({ conversation }).populate('conversation');
+
+        console.log({ data });
+        return {
+            success: true, data
+        }
 
     }
 }
