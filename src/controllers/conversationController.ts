@@ -18,6 +18,16 @@ class conversationController extends abstractController {
         }
     })
 
+    // delete conversation 
+    public deleteConversation = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.conversationService.deleteConversation(req);
+        if (data.success) {
+            res.status(200).json(data)
+        } else {
+            res.status(500).json(data);
+        }
+    })
+
     // get all conversations
     public getAllConversation = this.wrap(async (req: Request, res: Response) => {
         const data = await this.conversationService.getAllConversation(req);

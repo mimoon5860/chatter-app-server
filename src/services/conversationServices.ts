@@ -21,8 +21,19 @@ class conversationService extends db {
 
             return { success: true }
         }
+    }
 
+    // delete conversation 
+    public deleteConversation = async (req: Request) => {
+        const { conversation, user } = req.body;
+        const conversationCollection = this.conversationCollection();
+        const result = await conversationCollection.updateOne({ _id: conversation }, { $pull: { participant: user } }, { new: true });
 
+        if (result.modifiedCount) {
+            return { success: true, msg: "Conversation Deleted successfully!" }
+        } else {
+            return { success: false, msg: "Something is wrong!" }
+        }
     }
 
     //  get all conversations of an user 

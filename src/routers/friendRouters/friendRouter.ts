@@ -1,10 +1,12 @@
 import { body, param } from "express-validator";
 import abstractRouter from "../../abstracts/abstractRouters";
 import friendController from "../../controllers/friendController";
+import tokenCheck from "../../middleware/tokenCheck";
 import sanitizers from "../../utils/inputValidation/sanitizers";
 
 class friendRouter extends abstractRouter {
     private friendController = new friendController();
+    private checkToken = new tokenCheck();
     constructor() {
         super();
         this.callRouter()
@@ -13,7 +15,7 @@ class friendRouter extends abstractRouter {
     private callRouter() {
 
         // send request for add friend router
-        this.router.post('/send/request', body('sender_id').exists().customSanitizer(sanitizers.toObjectId), body('receiver_id').exists().customSanitizer(sanitizers.toObjectId), this.friendController.sendFriendRequest);
+        this.router.post('/send/request', this.checkToken.tokenCheck, body('sender_id').exists().customSanitizer(sanitizers.toObjectId), body('receiver_id').exists().customSanitizer(sanitizers.toObjectId), this.friendController.sendFriendRequest);
 
         // accept friend request
         this.router.put('/accept/request', body('requester').exists().customSanitizer(sanitizers.toObjectId), body('receiver').exists().customSanitizer(sanitizers.toObjectId), this.friendController.acceptFriendRequest);

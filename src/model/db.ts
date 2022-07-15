@@ -63,6 +63,7 @@ class db {
         type: Schema.Types.ObjectId, ref: 'User', required: true
       }],
       type: { type: String, enum: ['personal', 'group'], required: true },
+      lastMsg: { type: String, default: null },
       name: { type: String, default: null },
       coverImg: { type: String, default: null }
     }, { timestamps: true });

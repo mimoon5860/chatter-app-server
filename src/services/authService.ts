@@ -33,7 +33,6 @@ class authServices extends db {
             const { password, __v, ...rest } = checkUser._doc;
             const passCheck = await lib.compare(creds.password, password)
             if (passCheck) {
-
                 return { success: true, data: rest }
             } else {
                 return { success: false, msg: "Wrong password!" }

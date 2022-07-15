@@ -1,4 +1,6 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { jwtSecret } from '../../model/config';
 class lib {
 
     //Hash password
@@ -13,6 +15,22 @@ class lib {
         return await bcrypt.compare(password, hashedPassword);
     }
 
+
+    // create jwt token
+    public static async makeToken(data: any) {
+        const token = jwt.sign(data, jwtSecret);
+        return token;
+    }
+
+    // verify jwt token 
+    public static async verifyToken(token: string) {
+        try {
+            const decoded = jwt.verify(token, jwtSecret);
+            return decoded;
+        } catch (err) {
+            return null;
+        }
+    }
 }
 
 export default lib;

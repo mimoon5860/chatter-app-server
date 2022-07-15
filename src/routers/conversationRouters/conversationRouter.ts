@@ -11,9 +11,15 @@ class conversationRouter extends abstractRouter {
         this.callRouters();
     }
     private callRouters() {
+
+        // get all conversation of an user 
         this.router.get('/get/all/:userId', param('userId').customSanitizer(sanitizers.toObjectId), this.conversationController.getAllConversation);
 
-        this.router.post('/create', body('creator').customSanitizer(sanitizers.toObjectId), body('participant').isArray({ min: 2 }), this.conversationController.createConversation)
+        // create conversation 
+        this.router.post('/create', body('creator').customSanitizer(sanitizers.toObjectId), body('participant').isArray({ min: 2 }), this.conversationController.createConversation);
+
+        // delete a conversation from an user
+        this.router.delete('/delete', body('conversation').customSanitizer(sanitizers.toObjectId), body('user').customSanitizer(sanitizers.toObjectId), this.conversationController.deleteConversation);
     }
 
 }

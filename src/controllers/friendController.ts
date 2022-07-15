@@ -13,7 +13,6 @@ class friendController extends abstractController {
         } else {
             res.status(403).json(data);
         }
-
     }
     )
 

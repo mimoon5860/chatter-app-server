@@ -12,7 +12,7 @@ class chatRouter extends abstractRouter {
     private callRouters() {
 
         // send msg 
-        this.router.post('/send/msg', body('senderId').exists().customSanitizer(sanitizers.toObjectId), body('receiverId').exists().customSanitizer(sanitizers.toObjectId), this.chatsController.sendMsgController);
+        this.router.post('/send/msg', body('senderId').exists().customSanitizer(sanitizers.toObjectId), body('conversation').exists().customSanitizer(sanitizers.toObjectId), this.chatsController.sendMsgController);
 
         // get all msgs of a conversation 
         this.router.get('/get/msgs/:conversation', param('conversation').exists().customSanitizer(sanitizers.toObjectId), this.chatsController.getMsgsOfConvo)

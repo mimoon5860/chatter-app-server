@@ -4,6 +4,7 @@ import allRouters from './routers/allRouters';
 import morgan from 'morgan';
 import notFound from './middleware/notFound';
 import errorHandle from './middleware/errorHandler';
+import cookieParser from 'cookie-parser';
 
 class App {
   private app: Application;
@@ -19,8 +20,9 @@ class App {
 
   private initMiddlewares() {
     this.app.use(express.json());
-    this.app.use(cors())
-    this.app.use(morgan('tiny'))
+    this.app.use(cors());
+    this.app.use(morgan('tiny'));
+    this.app.use(cookieParser());
   }
 
   private startingRouters(routers: allRouters) {

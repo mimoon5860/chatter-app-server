@@ -9,7 +9,10 @@ class chatService extends db {
     // send msgs
     public sendMsg = async (req: Request) => {
         const chatCollection = this.chatCollection();
+        const conversationCollection = this.conversationCollection();
+        await conversationCollection.updateOne({ _id: req.body.conversation }, { lastMsg: req.body.message });
         const data = new chatCollection(req.body);
+
         const msg = await data.save();
         if (msg._id) {
             return { success: true, msg: "Message has been send successfully!" }

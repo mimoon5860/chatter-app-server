@@ -25,7 +25,8 @@ export type TConversation = {
     participant: Types.ObjectId[],
     type: string,
     name: string,
-    coverImg: string
+    coverImg: string,
+    lastMsg: String
 }
 
 export type TChat = {
