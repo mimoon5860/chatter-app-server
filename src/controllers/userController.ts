@@ -31,5 +31,16 @@ class userController extends abstractController {
 
     })
 
+
+    // user upload avatar
+    public uploadUserAvatar = this.wrap(async (req: Request, res: Response) => {
+        console.log(req.file);
+        const data = await this.userServices.uploadUserAvatar(req);
+        if (data.success) {
+            res.status(200).json("hello");
+        } else {
+            res.status(403).json(data);
+        }
+    })
 }
 export default userController;

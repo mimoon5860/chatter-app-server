@@ -18,7 +18,7 @@ class userRouter extends abstractRouter {
         //get an user router
         this.router.get('/get/:viewer/:user', param('viewer').customSanitizer(sanitizers.toObjectId), param('user').customSanitizer(sanitizers.toObjectId), this.userController.getAnUser);
 
-
+        this.router.post('/upload/avatar/:id', param('id').customSanitizer(sanitizers.toObjectId), this.uploader.singleUploader('avatars'), this.userController.uploadUserAvatar)
     }
 }
 

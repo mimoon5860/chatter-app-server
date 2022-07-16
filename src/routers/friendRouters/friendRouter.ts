@@ -1,12 +1,10 @@
-import { body, param } from "express-validator";
+import { body } from "express-validator";
 import abstractRouter from "../../abstracts/abstractRouters";
 import friendController from "../../controllers/friendController";
-import tokenCheck from "../../middleware/tokenCheck";
 import sanitizers from "../../utils/inputValidation/sanitizers";
 
 class friendRouter extends abstractRouter {
     private friendController = new friendController();
-    private checkToken = new tokenCheck();
     constructor() {
         super();
         this.callRouter()

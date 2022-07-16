@@ -61,6 +61,11 @@ class userServices extends db {
         }
     }
 
+    // user upload avatar
+    public uploadUserAvatar = async (req: Request) => {
+        return { success: true, data: req }
+    }
+
 
 
 }
