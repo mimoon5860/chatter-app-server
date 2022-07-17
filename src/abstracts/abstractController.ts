@@ -12,6 +12,9 @@ class abstractController {
             try {
                 const errors = validationResult(req);
                 if (!errors.isEmpty()) {
+                    if (req.upFiles) {
+                        this.deleteFile.delete(req.upFolder, req.upFiles);
+                    }
                     res.status(400).json({ success: false, errors: errors.array() });
                 } else {
                     await cb(req, res, next);

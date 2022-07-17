@@ -1,6 +1,7 @@
-import { body, param } from "express-validator";
+import { param } from "express-validator";
 import abstractRouter from "../../abstracts/abstractRouters";
 import userController from "../../controllers/userController";
+import checkFiles from "../../middleware/checkFiles";
 import sanitizers from "../../utils/inputValidation/sanitizers";
 
 class userRouter extends abstractRouter {
@@ -19,7 +20,7 @@ class userRouter extends abstractRouter {
         this.router.get('/get/:viewer/:user', param('viewer').customSanitizer(sanitizers.toObjectId), param('user').customSanitizer(sanitizers.toObjectId), this.userController.getAnUser);
 
         // upload user avatar 
-        this.router.post('/upload/avatar/:id', param('id').customSanitizer(sanitizers.toObjectId), body('photo').exists(), this.uploader.singleUploader('avatars'), this.userController.uploadUserAvatar);
+        this.router.post('/upload/avatar/:id', param('id').customSanitizer(sanitizers.toObjectId), this.uploader.singleUploader('avatars'), checkFiles.checkSingleFile, this.userController.uploadUserAvatar);
     }
 }
 

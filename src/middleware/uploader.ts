@@ -31,10 +31,6 @@ class uploader {
                 } else {
                     req.upFolder = folder;
 
-                    const { filename } = (req.file || {}) as Express.Multer.File;
-                    if (filename) {
-                        req.upFiles = filename;
-                    }
                     this.compressor.compress(folder)(req, res, next);
                 }
             });
@@ -65,18 +61,7 @@ class uploader {
                     } else {
                         req.upFolder = folder;
 
-                        if (req.files) {
-                            let filesToSet: string[] = [];
-                            const files = req.files as Express.Multer.File[];
-                            for (let i = 0; i < files.length; i++) {
-                                const filename = files[i].filename;
-                                if (filename) {
-                                    filesToSet.push(filename);
-                                }
-                            }
 
-                            req.upFiles = filesToSet;
-                        }
                         this.compressor.compress(folder)(req, res, next);
                     }
                 });

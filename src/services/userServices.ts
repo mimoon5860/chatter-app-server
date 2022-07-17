@@ -1,6 +1,6 @@
 import { Request } from "express";
 import db from "../model/db";
-import { TFriend, TUser } from "../utils/types/types";
+import { CustomRequest, TFriend, TUser } from "../utils/types/types";
 
 class userServices extends db {
     constructor() {
@@ -62,9 +62,9 @@ class userServices extends db {
     }
 
     // user upload avatar
-    public uploadUserAvatar = async (req: Request) => {
+    public uploadUserAvatar = async (req: CustomRequest) => {
         const userCollection = this.userCollection();
-        const result = await userCollection.findByIdAndUpdate({ _id: req.params.id }, { photo: req.file.filename }, { new: true })
+        const result = await userCollection.findByIdAndUpdate({ _id: req.params.id }, { photo: req.upFiles }, { new: true })
         return { success: true, }
     }
 
