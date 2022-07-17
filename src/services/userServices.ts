@@ -63,7 +63,9 @@ class userServices extends db {
 
     // user upload avatar
     public uploadUserAvatar = async (req: Request) => {
-        return { success: true, data: req }
+        const userCollection = this.userCollection();
+        const result = await userCollection.findByIdAndUpdate({ _id: req.params.id }, { photo: req.file.filename }, { new: true })
+        return { success: true, }
     }
 
 

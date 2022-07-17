@@ -4,6 +4,12 @@ import { Types } from "mongoose";
 // abstract controller wrap type 
 export type func = (req: Request, res: Response, next: NextFunction) => Promise<void>;
 
+// interface for custom add up folder 
+export interface CustomRequest extends Request {
+    upFolder?: string;
+    upFiles?: string | string[];
+}
+
 // user table Schema type 
 export type TUser = {
     name: string;

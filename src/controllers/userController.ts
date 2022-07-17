@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import abstractController from "../abstracts/abstractController";
 import userServices from "../services/userServices";
+import { CustomRequest } from "../utils/types/types";
 
 class userController extends abstractController {
     private userServices = new userServices();
@@ -33,12 +34,14 @@ class userController extends abstractController {
 
 
     // user upload avatar
-    public uploadUserAvatar = this.wrap(async (req: Request, res: Response) => {
-        console.log(req.file);
+    public uploadUserAvatar = this.wrap(async (req: CustomRequest, res: Response) => {
         const data = await this.userServices.uploadUserAvatar(req);
         if (data.success) {
-            res.status(200).json("hello");
+            res.status(200).json(data);
         } else {
+            if (req.upFiles) {
+                this.deleteFile.delete(req.upFolder, req.upFiles);
+            }
             res.status(403).json(data);
         }
     })

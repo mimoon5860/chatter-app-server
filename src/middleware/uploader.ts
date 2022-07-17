@@ -1,36 +1,90 @@
 import { NextFunction, Request, Response } from "express";
 import multer from 'multer';
-import path from "path";
+import compressor from "../utils/compressor/compressor";
+import { CustomRequest } from "../utils/types/types";
 
-const mimetype = ['image/jpg', 'image/png', 'image/jpeg']
+
+
+const mimetype = ['image/jpg', 'image/png', 'image/jpeg', 'image/gif'];
 
 class uploader {
+    private compressor = new compressor();
+
     public singleUploader(folder: string) {
-        const storage = multer.diskStorage({
-            destination: (req, file, cb) => {
-                cb(null, `dist/uploads/${folder}`);
-            },
-            filename: (req, file, cb) => {
-                const fileExt = path.extname(file.originalname);
-                const fileName = file.originalname.replace(fileExt, "").toLowerCase().split(" ").join("_") + "-" + Date.now();
-                console.log({ fileName });
-                cb(null, fileName + fileExt);
-            }
-        })
-
-        const upload = multer({
-            storage: storage,
-            limits: { fileSize: 5000000 },
-            fileFilter: (req, file, cb) => {
-                if (mimetype.includes(file.mimetype)) {
-                    cb(null, true);
-                } else {
-                    cb(new Error('Invalid file type!'))
+        return (async (req: CustomRequest, res: Response, next: NextFunction) => {
+            const storage = multer.memoryStorage();
+            const upload = multer({
+                storage,
+                limits: { fileSize: 5000000 },
+                fileFilter: (_req, file, cb) => {
+                    if (mimetype.includes(file.mimetype)) {
+                        cb(null, true);
+                    } else {
+                        cb(new Error('Invalid file type!'))
+                    }
                 }
-            }
-        })
+            })
 
-        return upload.single('photo');
+            upload.single('photo')(req, res, (err: any) => {
+                if (err) {
+                    next(new Error('Upload failed'));
+                } else {
+                    req.upFolder = folder;
+
+                    const { filename } = (req.file || {}) as Express.Multer.File;
+                    if (filename) {
+                        req.upFiles = filename;
+                    }
+                    this.compressor.compress(folder)(req, res, next);
+                }
+            });
+        })
+    }
+
+
+    public multiUploader(folder: string) {
+        return (
+            async (req: CustomRequest, res: Response, next: NextFunction) => {
+
+                const storage = multer.memoryStorage();
+                const upload = multer({
+                    storage,
+                    limits: { fileSize: 5000000 },
+                    fileFilter: (_req, file, cb) => {
+                        if (mimetype.includes(file.mimetype)) {
+                            cb(null, true);
+                        } else {
+                            cb(new Error('Invalid file type!'))
+                        }
+                    }
+                })
+
+                upload.any()(req, res, (err: any) => {
+                    if (err) {
+                        next(new Error('Upload failed'));
+                    } else {
+                        req.upFolder = folder;
+
+                        if (req.files) {
+                            let filesToSet: string[] = [];
+                            const files = req.files as Express.Multer.File[];
+                            for (let i = 0; i < files.length; i++) {
+                                const filename = files[i].filename;
+                                if (filename) {
+                                    filesToSet.push(filename);
+                                }
+                            }
+
+                            req.upFiles = filesToSet;
+                        }
+                        this.compressor.compress(folder)(req, res, next);
+                    }
+                });
+
+
+
+            }
+        )
     }
 }
 
