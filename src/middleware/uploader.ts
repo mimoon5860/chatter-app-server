@@ -61,7 +61,6 @@ class uploader {
                     } else {
                         req.upFolder = folder;
 
-
                         this.compressor.compress(folder)(req, res, next);
                     }
                 });

@@ -22,7 +22,6 @@ class authController extends abstractController {
         if (data.success) {
             const token = await lib.makeToken(data.data);
             res.cookie('token', token);
-            console.log({ token });
             res.status(200).json(data);
         } else {
             res.status(403).json(data);

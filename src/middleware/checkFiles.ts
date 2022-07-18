@@ -17,6 +17,7 @@ class checkFiles {
             });
         }
     }
+
     public static checkMultiFile(req: Request, res: Response, next: NextFunction) {
         if (req.files.length) {
             next();

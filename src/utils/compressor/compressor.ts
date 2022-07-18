@@ -46,7 +46,6 @@ class compressor {
                         }
 
                         const { filename } = (req.file || {}) as Express.Multer.File;
-                        console.log(req.file)
                         if (filename) {
                             req.upFiles = filename;
                         }
@@ -56,6 +55,8 @@ class compressor {
                         // iterate the files for compressing
 
                         const files = req.files as Express.Multer.File[];
+
+
 
                         for (let i = 0; i < req.files.length; i++) {
                             const { buffer } = files[i];
