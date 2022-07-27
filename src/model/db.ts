@@ -35,8 +35,8 @@ class db {
   public friendsCollection() {
     this.dbConnect();
     const friendsSchema = new Schema({
-      userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-      friendId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, alias: 'friendsId' },
+      friendId: { type: Schema.Types.ObjectId, ref: 'User', required: true, alias: 'friendsId' },
       type: {
         type: String,
         enums: [
@@ -67,7 +67,8 @@ class db {
       name: { type: String, default: null },
       coverImg: { type: String, default: null }
     }, { timestamps: true });
-    const Conversation = models.Conversation || model<TConversation>('Conversation', conversationSchema);
+
+    const Conversation = models.Conversations || model<TConversation>('Conversations', conversationSchema);
     return Conversation;
   }
 
@@ -81,7 +82,7 @@ class db {
       file: { type: [String], default: null },
       conversation: { type: Schema.Types.ObjectId, ref: "Conversation", required: true }
     }, { timestamps: true });
-    const Chats = models.Chat || model<TChat>('Chat', chatsSchema);
+    const Chats = models.Chats || model<TChat>('Chats', chatsSchema);
     return Chats;
   }
 }

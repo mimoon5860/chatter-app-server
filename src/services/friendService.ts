@@ -6,6 +6,22 @@ class friendService extends db {
         super();
     }
 
+    // get all friends 
+    public getAllFriends = async (req: Request) => {
+        const { uid } = req.params;
+        const friendsCollection = this.friendsCollection();
+        const checkUser = await friendsCollection.find({ $and: [{ userId: uid }, { type: 'friend' }] }).select({ friendId: 1 });
+
+        const checkFriend = await friendsCollection.find({ $and: [{ friendId: uid }, { type: 'friend' }] }).select({ userId: 1 });
+        if (checkUser.length) {
+            return { success: true, data: checkUser }
+        } else if (checkFriend.length) {
+            return { success: true, data: checkFriend }
+
+        }
+        return { success: true, data: [] }
+    }
+
     // send friend request service
     public sendFriendRequest = async (req: Request) => {
         const { sender_id, receiver_id, note } = req.body;
@@ -25,8 +41,6 @@ class friendService extends db {
             return { success: false, msg: 'Cannot Send Request now!' }
         }
     }
-
-
 
     // accept friend request service
     public acceptFriendRequest = async (req: Request) => {

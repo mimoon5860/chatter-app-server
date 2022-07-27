@@ -17,7 +17,6 @@ class chatService extends db {
         const conversationCollection = this.conversationCollection();
         await conversationCollection.updateOne({ _id: req.body.conversation }, { lastMsg: req.body.message });
         const data = new chatCollection(body);
-
         const msg = await data.save();
         if (msg._id) {
             return { success: true, msg: "Message has been send successfully!" }
@@ -30,9 +29,9 @@ class chatService extends db {
     public getMsgsOfConvo = async (req: Request) => {
         const { conversation } = req.params;
         const chatCollection = this.chatCollection();
+        console.log({ conversation })
 
-        const data = await chatCollection.find({ conversation }).populate('conversation');
-
+        const data = await chatCollection.find({ conversation });
         return {
             success: true, data
         }

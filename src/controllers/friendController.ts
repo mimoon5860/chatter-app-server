@@ -5,6 +5,16 @@ import friendService from "../services/friendService";
 class friendController extends abstractController {
     private friendService = new friendService();
 
+    // get all friends 
+    public getAllFriends = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.friendService.getAllFriends(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(500).json(data);
+        }
+    })
+
     // send friend request controller
     public sendFriendRequest = this.wrap(async (req: Request, res: Response) => {
         const data = await this.friendService.sendFriendRequest(req);

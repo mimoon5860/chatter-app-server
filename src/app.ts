@@ -1,18 +1,24 @@
 import express, { Application } from 'express';
+import { createServer, Server } from "http";
 import cors from 'cors';
 import allRouters from './routers/allRouters';
 import morgan from 'morgan';
 import notFound from './middleware/notFound';
 import errorHandle from './middleware/errorHandler';
 import cookieParser from 'cookie-parser';
+import { io, socketServer } from './utils/socket/socket';
 
 class App {
   private app: Application;
   private port: number;
+  private httpServer: Server;
+
 
   constructor(port: number) {
     this.app = express();
     this.port = port;
+    this.httpServer = createServer(this.app);
+    socketServer(this.httpServer);
     this.initMiddlewares();
     this.startingRouters(new allRouters());
     this.errorHandle();
@@ -28,6 +34,10 @@ class App {
   private startingRouters(routers: allRouters) {
     this.app.get('/', (_req, res) => {
       res.send('Server is running bro chill!');
+    });
+
+    io.on("connection", (socket) => {
+      console.log('Socket Connected. id: ' + socket.id);
     });
 
     // auth router 
@@ -53,7 +63,7 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.httpServer.listen(this.port, () => {
       console.log(`Server is running at port ${this.port}`);
     });
   }

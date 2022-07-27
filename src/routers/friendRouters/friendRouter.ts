@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import abstractRouter from "../../abstracts/abstractRouters";
 import friendController from "../../controllers/friendController";
 import sanitizers from "../../utils/inputValidation/sanitizers";
@@ -11,6 +11,9 @@ class friendRouter extends abstractRouter {
     }
 
     private callRouter() {
+
+        // get all friend
+        this.router.get('/get/all/friends/:uid', param('uid').exists().customSanitizer(sanitizers.toObjectId), this.friendController.getAllFriends)
 
         // send request for add friend router
         this.router.post('/send/request', this.checkToken.tokenCheck, body('sender_id').exists().customSanitizer(sanitizers.toObjectId), body('receiver_id').exists().customSanitizer(sanitizers.toObjectId), this.friendController.sendFriendRequest);
