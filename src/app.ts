@@ -13,6 +13,10 @@ class App {
   private port: number;
   private httpServer: Server;
 
+  private origin = [
+    'http://localhost:3000',
+  ]
+
 
   constructor(port: number) {
     this.app = express();
@@ -26,7 +30,7 @@ class App {
 
   private initMiddlewares() {
     this.app.use(express.json());
-    this.app.use(cors());
+    this.app.use(cors({ origin: this.origin, credentials: true }));
     this.app.use(morgan('tiny'));
     this.app.use(cookieParser());
   }
