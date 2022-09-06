@@ -14,6 +14,7 @@ export interface CustomRequest extends Request {
 export type TUser = {
     name: string;
     phone: string;
+    email: string;
     photo?: string;
     verified: string;
     password: string;

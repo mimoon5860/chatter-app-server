@@ -6,7 +6,6 @@ import { CustomRequest } from "../utils/types/types";
 class chatsController extends abstractController {
 
     private chatService: chatService = new chatService();
-
     constructor() {
         super();
     }

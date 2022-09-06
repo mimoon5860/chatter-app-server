@@ -8,7 +8,6 @@ class userRouter extends abstractRouter {
     private userController = new userController();
     constructor() {
         super();
-
         this.callRouter()
     }
 

@@ -11,7 +11,6 @@ class conversationRouter extends abstractRouter {
         this.callRouters();
     }
     private callRouters() {
-
         // get all conversation of an user 
         this.router.get('/get/all/:userId', param('userId').customSanitizer(sanitizers.toObjectId), this.conversationController.getAllConversation);
 

@@ -5,7 +5,7 @@ class db {
   //database connection
   private dbConnect = async () => {
     try {
-      connect(`mongodb://127.0.0.1:27017/chatter`, (err) => {
+      connect(`mongodb://127.0.0.1:27017`, (err) => {
         if (err) {
           console.log({ err });
         } else {
@@ -13,7 +13,7 @@ class db {
         }
       });
     } catch (err) {
-      console.log({ err });
+      console.log(err);
     }
   }
 
@@ -23,6 +23,7 @@ class db {
     const userSchema = new Schema<TUser>({
       name: { type: String, required: true },
       phone: { type: String, required: true },
+      email: { type: String, required: null },
       password: { type: String, required: true },
       verified: { type: String, enum: ["verified", "unverified"], default: "unverified" },
       photo: { type: String, default: null },
