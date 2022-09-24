@@ -45,5 +45,15 @@ class userController extends abstractController {
             res.status(403).json(data);
         }
     })
+
+    // get simple user photo and name
+    public getUserNameAndPhoto = this.wrap(async (req: Request, res: Response) => {
+        const data = await this.userServices.getUserNameAndPhoto(req);
+        if (data.success) {
+            res.status(200).json(data);
+        } else {
+            res.status(404).json(data);
+        }
+    })
 }
 export default userController;

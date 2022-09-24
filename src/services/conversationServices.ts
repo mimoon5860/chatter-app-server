@@ -39,10 +39,10 @@ class conversationService extends db {
     //  get all conversations of an user 
     public getAllConversation = async (req: Request) => {
         const { userId } = req.params;
-
+        console.log({ userId });
         const conversationCollection = this.conversationCollection();
         const data = await conversationCollection.find({ participant: userId }).select({ createdAt: 0, updatedAt: 0, __v: 0 });
-
+        console.log({ data });
         return { success: true, data }
     }
 

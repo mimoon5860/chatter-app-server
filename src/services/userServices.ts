@@ -24,7 +24,6 @@ class userServices extends db {
         const { viewer, user } = req.params;
         const userCollection = this.userCollection();
         const friendsCollection = this.friendsCollection();
-
         const checkFromViewer: TFriend = await friendsCollection.findOne({ userId: viewer, friendId: user }).select({ type: 1 });
         const checkFromUser = await friendsCollection.findOne({ userId: user, friendId: viewer }).select({ type: 1 });
 
@@ -69,9 +68,21 @@ class userServices extends db {
         return { success: true, msg: 'Photo update successfully!' }
     }
 
-
-
+    // get user pic and name simple
+    public getUserNameAndPhoto = async (req: Request) => {
+        const { id } = req.params;
+        console.log({ id });
+        const userCollection = this.userCollection();
+        const userData: TUser = await userCollection.findById(id).select({ name: 1, photo: 1 });
+        console.log({ userData })
+        if (userData) {
+            return { success: true, data: userData, msg: "User photo and name get successful" }
+        } else {
+            return {
+                success: false, msg: "Cannot find user with this id"
+            }
+        }
+    }
 }
-
 
 export default userServices;

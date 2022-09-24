@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import { createServer, Server } from "http";
 import cors from 'cors';
 import allRouters from './routers/allRouters';
@@ -7,6 +7,7 @@ import notFound from './middleware/notFound';
 import errorHandle from './middleware/errorHandler';
 import cookieParser from 'cookie-parser';
 import { io, socketServer } from './utils/socket/socket';
+import path from 'path';
 
 class App {
   private app: Application;
@@ -17,15 +18,16 @@ class App {
     'http://localhost:3000',
   ]
 
-
   constructor(port: number) {
     this.app = express();
     this.port = port;
     this.httpServer = createServer(this.app);
     socketServer(this.httpServer);
     this.initMiddlewares();
+    this.sendFiles();
     this.startingRouters(new allRouters());
     this.errorHandle();
+
   }
 
   private initMiddlewares() {
@@ -60,6 +62,13 @@ class App {
     this.app.use('/api/conversation', routers.conversationRouter);
 
     this.app.use(new notFound().notFound)
+  }
+
+  private sendFiles() {
+    this.app.get('/get/image/:folder/:filename', (req: Request, res: Response) => {
+      const { folder, filename } = req.params;
+      res.sendFile(path.resolve(`${__dirname}/uploads/${folder}/${filename}`));
+    });
   }
 
   private errorHandle() {

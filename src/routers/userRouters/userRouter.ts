@@ -20,6 +20,9 @@ class userRouter extends abstractRouter {
 
         // upload user avatar 
         this.router.post('/upload/avatar/:id', param('id').customSanitizer(sanitizers.toObjectId), this.uploader.singleUploader('avatars'), checkFiles.checkSingleFile, this.userController.uploadUserAvatar);
+
+        // get user simple photo and name 
+        this.router.get('/get/user/name-photo/:id', param('id').customSanitizer(sanitizers.toObjectId), this.userController.getUserNameAndPhoto)
     }
 }
 

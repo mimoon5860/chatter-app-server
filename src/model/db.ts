@@ -5,7 +5,7 @@ class db {
   //database connection
   private dbConnect = async () => {
     try {
-      connect(`mongodb://127.0.0.1:27017`, (err) => {
+      connect(`mongodb://127.0.0.1:27017/chatter`, (err) => {
         if (err) {
           console.log({ err });
         } else {
