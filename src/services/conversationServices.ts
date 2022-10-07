@@ -45,7 +45,6 @@ class conversationService extends db {
         console.log({ data });
         return { success: true, data }
     }
-
 }
 
 export default conversationService;

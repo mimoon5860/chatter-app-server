@@ -10,12 +10,16 @@ class chatService extends db {
     // send msgs
     public sendMsg = async (req: CustomRequest) => {
         let body = req.body;
+        console.log(req.body.conversation, req.body.message);
         if (req.upFiles) {
             body = { ...body, file: req.upFiles }
         }
         const chatCollection = this.chatCollection();
         const conversationCollection = this.conversationCollection();
-        await conversationCollection.updateOne({ _id: req.body.conversation }, { lastMsg: req.body.message });
+
+        const res = await conversationCollection.findByIdAndUpdate({ _id: req.body.conversation }, { lastMsg: req.body.message }, { new: true });
+
+        console.log({ res });
         const data = new chatCollection(body);
         const msg = await data.save();
         if (msg._id) {
@@ -29,9 +33,8 @@ class chatService extends db {
     public getMsgsOfConvo = async (req: Request) => {
         const { conversation } = req.params;
         const chatCollection = this.chatCollection();
-        console.log({ conversation })
 
-        const data = await chatCollection.find({ conversation });
+        const data = await chatCollection.find({ conversation }, { __v: 0 });
         return {
             success: true, data
         }

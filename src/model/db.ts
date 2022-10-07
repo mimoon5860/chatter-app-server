@@ -2,24 +2,10 @@ import { connect, model, Schema, models } from 'mongoose';
 import { TUser, TFriend, TChat, TConversation } from '../utils/types/types';
 
 class db {
-  //database connection
-  private dbConnect = async () => {
-    try {
-      connect(`mongodb://127.0.0.1:27017/chatter`, (err) => {
-        if (err) {
-          console.log({ err });
-        } else {
-          console.log("Database Connected");
-        }
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  }
+
 
   // user collection 
   public userCollection() {
-    this.dbConnect();
     const userSchema = new Schema<TUser>({
       name: { type: String, required: true },
       phone: { type: String, required: true },
@@ -34,7 +20,6 @@ class db {
 
   // Friends collection
   public friendsCollection() {
-    this.dbConnect();
     const friendsSchema = new Schema({
       userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, alias: 'friendsId' },
       friendId: { type: Schema.Types.ObjectId, ref: 'User', required: true, alias: 'friendsId' },
@@ -55,7 +40,6 @@ class db {
 
   // Conversations Collection
   public conversationCollection() {
-    this.dbConnect();
     const conversationSchema = new Schema<TConversation>({
       creator: {
         type: Schema.Types.ObjectId, ref: 'User', required: true
@@ -75,7 +59,6 @@ class db {
 
   // Chat collection
   public chatCollection() {
-    this.dbConnect();
     const chatsSchema = new Schema<TChat>({
       message: { type: String, default: null },
       senderId: { type: Schema.Types.ObjectId, ref: "User", required: true },

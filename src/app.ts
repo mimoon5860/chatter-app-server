@@ -8,6 +8,7 @@ import errorHandle from './middleware/errorHandler';
 import cookieParser from 'cookie-parser';
 import { io, socketServer } from './utils/socket/socket';
 import path from 'path';
+import { connect } from 'mongoose';
 
 class App {
   private app: Application;
@@ -23,6 +24,7 @@ class App {
     this.port = port;
     this.httpServer = createServer(this.app);
     socketServer(this.httpServer);
+    this.dbConnect();
     this.initMiddlewares();
     this.sendFiles();
     this.startingRouters(new allRouters());
@@ -35,6 +37,21 @@ class App {
     this.app.use(cors({ origin: this.origin, credentials: true }));
     this.app.use(morgan('tiny'));
     this.app.use(cookieParser());
+  }
+
+  //database connection
+  private dbConnect = async () => {
+    try {
+      connect(`mongodb://127.0.0.1:27017/chatter`, (err) => {
+        if (err) {
+          console.log({ err });
+        } else {
+          console.log("Database Connected");
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   private startingRouters(routers: allRouters) {
